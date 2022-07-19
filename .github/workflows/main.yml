@@ -11,10 +11,6 @@ on:
     - 'LICENSE'
     - 'README.md'
 
-env:
-  ENTRY_PROJECT_PATH: src/Jwtil.Cli
-  UNIT_TEST_PROJECT_PATH: src/Jwtil.Tests
-
 jobs:
   build:
     name: Build
@@ -28,10 +24,10 @@ jobs:
         dotnet-version: 6.0.301
     
     - name: Install Dependencies
-      run: dotnet restore ${{ env.SOURCE_DIRECTORY_PATH }}
+      run: dotnet restore src/Jwtil.Cli
 
     - name: Run Tests
-      run: dotnet test ${{ env.UNIT_TEST_PROJECT_PATH }} --logger trx --results-directory TestResults
+      run: dotnet test src/Jwtil.Tests --logger trx --results-directory TestResults
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v3
