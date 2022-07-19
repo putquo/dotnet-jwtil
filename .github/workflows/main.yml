@@ -1,0 +1,41 @@
+name: release
+
+on:
+  push:
+    paths-ignore:
+    - '.editorconfig'
+    - '.gitignore'
+    - 'CHANGELOG.md'
+    - 'CONTRIBUTING.md'
+    - 'docs/**'
+    - 'LICENSE'
+    - 'README.md'
+
+env:
+  ENTRY_PROJECT_PATH: src/Jwtil.Cli
+  UNIT_TEST_PROJECT_PATH: src/Jwtil.Tests
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Dotnet
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.301
+    
+    - name: Install Dependencies
+      run: dotnet restore ${{ env.SOURCE_DIRECTORY_PATH }}
+
+    - name: Run Tests
+      run: dotnet test ${{ env.UNIT_TEST_PROJECT_PATH }} --logger trx --results-directory TestResults
+
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v3
+      if: ${{ always() }}
+      with:
+        name: test-results
+        path: TestResults
