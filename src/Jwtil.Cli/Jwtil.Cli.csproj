@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	  <AssemblyName>jwtil</AssemblyName>
+    <Version>0.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,0 +1,25 @@
+branches:
+  - main
+plugins:
+  - "@semantic-release/commit-analyzer"
+  - - "@semantic-release/github"
+    - assets:
+      - dist/**
+  - "@semantic-release/release-notes-generator"
+  - "@semantic-release/changelog"
+  - - "@google/semantic-release-replace-plugin"
+    - replacements:
+        - files:
+            - src/Jwtil.Cli/Jwtil.Cli.csproj
+          from: <Version>.*</Version>
+          to: <Version>${nextRelease.version}</Version>
+          countMatches: true
+          results:
+            - file: src/Jwtil.Cli/Jwtil.Cli.csproj
+              hasChanged: true
+              numMatches: 1
+              numReplacements: 1
+  - - "@semantic-release/git"
+    - assets:
+        - CHANGELOG.md
+        - src/Jwtil.Cli/Jwtil.Cli.csproj

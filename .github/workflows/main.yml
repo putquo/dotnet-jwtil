@@ -3,35 +3,94 @@ name: release
 on:
   push:
     paths-ignore:
+    - '*.md'
     - '.editorconfig'
     - '.gitignore'
-    - 'CHANGELOG.md'
-    - 'CONTRIBUTING.md'
     - 'docs/**'
     - 'LICENSE'
-    - 'README.md'
 
 jobs:
   build:
-    name: Build
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ macos-latest, ubuntu-latest ]
+        include:
+        - os: macos-latest
+          rid: osx.13-arm64
+        - os: ubuntu-latest
+          rid: linux-x64
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
 
-    - name: Setup Dotnet
+    - name: Setup dotnet
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 6.0.301
+        dotnet-version: 6.0.x
     
-    - name: Install Dependencies
+    - name: Install dependencies
       run: dotnet restore src/Jwtil.Cli
 
-    - name: Run Tests
-      run: dotnet test src/Jwtil.Tests --logger trx --results-directory TestResults
+    - name: Run tests
+      run: dotnet test src/Jwtil.Tests --logger trx --results-directory tests
 
-    - name: Upload Test Results
+    - name: Publish distributable
+      run: dotnet publish src/Jwtil.Cli --self-contained -r ${{ matrix.rid }} -c release -o dist/${{ matrix.rid }} -p:PublishSingleFile=true -p:DebugType=none -p:DebugSymbols=false
+
+    - name: Compress distributable
+      run: |
+        tar -cvzf ../${{ matrix.rid }}.tar.gz .
+        zip -rj ../${{ matrix.rid }}.zip .
+      working-directory: dist/${{ matrix.rid }}
+
+    - name: Upload test results
       uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
-        name: test-results
-        path: TestResults
+        name: tests
+        path: tests
+
+    - name: Upload distributable
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.rid }}
+        path: |
+          dist
+          !dist/${{ matrix.rid }}
+
+  release:
+    runs-on: ubuntu-latest
+    needs:
+    - build
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - uses: actions/download-artifact@v3
+      with:
+        path: dist
+
+    - name: Remove test results
+      run: rm -r tests
+      working-directory: dist
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 'lts/*'
+
+    - name: Install semantic-release and plugins
+      run: >
+        npm i -g
+        semantic-release
+        @semantic-release/changelog
+        @semantic-release/commit-analyzer
+        @semantic-release/git
+        @semantic-release/github
+        @google/semantic-release-replace-plugin
+
+    - name: Run semantic-release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: npx semantic-release
