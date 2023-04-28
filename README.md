@@ -1,7 +1,7 @@
 <h1 align="center" style="border-bottom: none;">🔑 dotnet-jwtil</h1>
 <div align="center">
     <a href="https://github.com/prestonvtonder/dotnet-jwtil/actions?query=workflow%3Arelease+branch%3Amain">
-        <img alt="Build Status" src="https://github.com/prestonvtonder/dotnet-jwtil/actions/workflows/main.yml/badge.svg">
+        <img alt="Build Status" src="https://github.com/prestonvtonder/dotnet-jwtil/actions/workflows/release.yml/badge.svg">
     </a>
     <a href="#badge">
         <img alt="semantic-release: angular" src="https://img.shields.io/badge/semantic--release-angular-e10079?logo=semantic-release">
@@ -49,13 +49,13 @@ jwtil eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6I
 
 #### Output
 ```
-╭─Header─────────────╮
+╭─Header 👎──────────╮
 │ {                  │
 │    "alg": "HS256", │
 │    "typ": "JWT"    │
 │ }                  │
 ╰────────────────────╯
-╭─Payload─────────────────╮
+╭─Payload 👎──────────────╮
 │ {                       │
 │    "sub": "1234567890", │
 │    "name": "John Doe",  │
