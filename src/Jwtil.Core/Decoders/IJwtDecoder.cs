@@ -8,9 +8,9 @@ public interface IJwtDecoder
   /// <summary>
   ///     Decodes a JSON Web Token.
   /// </summary>
-  /// <param name="jwt">The JSON Web Token.</param>
+  /// <param name="token">The JSON Web Token.</param>
   /// <returns>
   ///     A tuple with the serialized JSON header and payload.
   /// </returns>
-  Tuple<string, string> Decode(string jwt);
+  Tuple<string, string> Decode(string token);
 }

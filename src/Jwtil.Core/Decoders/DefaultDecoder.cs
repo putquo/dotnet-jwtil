@@ -17,13 +17,13 @@ public class DefaultJwtDecoder : IJwtDecoder
   /// <summary>
   ///     Decodes a JSON Web Token.
   /// </summary>
-  /// <param name="jwt">The JSON Web Token.</param>
+  /// <param name="token">The JSON Web Token.</param>
   /// <returns>
   ///     A tuple with the serialized JSON header and payload.
   /// </returns>
-  public Tuple<string, string> Decode(string jwt)
+  public Tuple<string, string> Decode(string token)
   {
-    var token = _handler.ReadJwtToken(jwt);
-    return Tuple.Create(token.Header.SerializeToJson(), token.Payload.SerializeToJson());
+    var t = _handler.ReadJwtToken(token);
+    return Tuple.Create(t.Header.SerializeToJson(), t.Payload.SerializeToJson());
   }
 }

@@ -19,7 +19,7 @@ public class DecodeCommand : Command<DecodeCommand.Settings>
   {
     [CommandArgument(0, "<token>")]
     [Description("The JSON Web Token")]
-    public string Jwt { get; set; } = default!;
+    public string Token { get; set; } = default!;
   }
 
   private readonly IJwtDecoder _decoder;
@@ -33,7 +33,7 @@ public class DecodeCommand : Command<DecodeCommand.Settings>
 
   public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
   {
-    var (header, payload) = _decoder.Decode(settings.Jwt);
+    var (header, payload) = _decoder.Decode(settings.Token);
     _writer.Write(header, payload);
     return 0;
   }
