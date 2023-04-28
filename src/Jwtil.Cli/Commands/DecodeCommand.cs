@@ -10,7 +10,7 @@ namespace Jwtil.Cli.Commands;
 /// <summary>
 ///     Class <c>DecodeCommand</c> describes a CLI command for decoding a JSON Web Token.
 /// </summary>
-public class DecodeCommand : Command<DecodeCommand.Settings>
+public class DecodeCommand : AsyncCommand<DecodeCommand.Settings>
 {
   /// <summary>
   ///     Class <c>DecodeCommand.Settings</c> describes the settings for <c>DecodeCommand</c>.
@@ -31,10 +31,18 @@ public class DecodeCommand : Command<DecodeCommand.Settings>
     _writer = writer;
   }
 
-  public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
+  public override async Task<int> ExecuteAsync([NotNull] CommandContext context, [NotNull] Settings settings)
   {
-    var (header, payload) = _decoder.Decode(settings.Token);
-    _writer.Write(header, payload);
-    return 0;
+    try
+    {
+      var decodedToken = await _decoder.DecodeAsync(settings.Token);
+      _writer.Write(decodedToken);
+      return 0;
+    }
+    catch (Exception ex)
+    {
+      AnsiConsole.MarkupLineInterpolated($"[bold red]Error:[/] {ex.Message}");
+      return 1;
+    }
   }
 }

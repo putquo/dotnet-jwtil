@@ -1,4 +1,6 @@
-﻿namespace Jwtil.Core.Services;
+﻿using Jwtil.Core.Models;
+
+namespace Jwtil.Core.Services;
 
 /// <summary>
 ///     Interface <c>IJwtDecoder</c> describes a generic decoder capable of decoding JSON Web Tokens.
@@ -10,7 +12,7 @@ public interface IJwtDecoder
   /// </summary>
   /// <param name="token">The JSON Web Token.</param>
   /// <returns>
-  ///     A tuple with the serialized JSON header and payload.
+  ///     A decoded JSON Web Token.
   /// </returns>
-  Tuple<string, string> Decode(string token);
+  Task<DecodedToken> DecodeAsync(string token);
 }

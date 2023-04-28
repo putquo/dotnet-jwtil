@@ -21,5 +21,5 @@ app.Configure(config =>
 });
 app.SetDefaultCommand<DecodeCommand>();
 
-app.Run(args);
+await app.RunAsync(args);
 

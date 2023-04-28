@@ -19,4 +19,8 @@
     <ProjectReference Include="..\Jwtil.Core\Jwtil.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup> 
+    <InternalsVisibleTo Include="Jwtil.Tests" /> 
+  </ItemGroup>
+
 </Project>

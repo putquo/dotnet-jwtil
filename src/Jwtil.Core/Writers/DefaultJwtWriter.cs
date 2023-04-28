@@ -1,4 +1,5 @@
-﻿using Spectre.Console;
+﻿using Jwtil.Core.Models;
+using Spectre.Console;
 using Spectre.Console.Json;
 
 namespace Jwtil.Core.Writers;
@@ -11,19 +12,19 @@ public class DefaultJwtWriter : IJwtWriter
   /// <summary>
   ///     Writes a decoded JSON Web Token to console.
   /// </summary>
-  /// <param name="header">The serialized header.</param>
-  /// <param name="payload">The serialized payload.</param>
-  public void Write(string header, string payload)
+  /// <param name="token">The decoded JSON Web Token.</param>
+  public void Write(DecodedToken token)
   {
+    var verifiedText = token.Verified ? Emoji.Known.ThumbsUp : Emoji.Known.ThumbsDown;
     AnsiConsole.Write(
-      new Panel(new JsonText(header))
-        .Header("Header")
+      new Panel(new JsonText(token.Header))
+        .Header("Header " + verifiedText)
         .Collapse()
         .RoundedBorder()
     );
     AnsiConsole.Write(
-      new Panel(new JsonText(payload))
-        .Header("Payload")
+      new Panel(new JsonText(token.Payload))
+        .Header("Payload " + verifiedText)
         .Collapse()
         .RoundedBorder()
     );
